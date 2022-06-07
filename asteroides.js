@@ -26,11 +26,29 @@ const music_on=true;
 const sound_on=true;
 const text_fade_time=3;
 const text_size=40;
+var rotation;
 var gamesEl=document.getElementById('games');
+var ship={
+    x:gamesEl.width/2,
+    y:gamesEl.height-20,
+    a:90/180*Math.PI,
+    r:10,
+    blinkNum:Math.ceil(ship_inv_dur/ship_blink_dur),
+    blinkTime:Math.ceil(ship_inv_dur*fps),
+    canShot:true,
+    lasers:[],
+    thrusting:false,
+    thrust: {
+        x:0,
+        y:0
+    },
+    explodeTime:0,
+    rot:null,
+    dead:false,
+}
 gamesEl.width=window.innerWidth;
 gamesEl.height=window.innerHeight;
 var ctx=gamesEl.getContext('2d');
-document.addEventListener('keydown',keyDown);
 var roidsLeft,roidsTotal;
 var level,lives,roids,score,scoreHight,ship,text,textAlpha;
 function drawShip(x,y){
@@ -42,26 +60,6 @@ function drawShip(x,y){
     ctx.closePath();
     ctx.stroke();
     ctx.fill();
-}
-function newShip(){
-    return {
-        x:gamesEl.width/2,
-        y:gamesEl.height-20,
-        a:90/180*Math.PI,
-        r:10,
-        blinkNum:Math.ceil(ship_inv_dur/ship_blink_dur),
-        blinkTime:Math.ceil(ship_inv_dur*fps),
-        canShot:true,
-        lasers:[],
-        thrusting:false,
-        thrust: {
-            x:0,
-            y:0
-        },
-        explodeTime:0,
-        rot:0,
-        dead:false,
-    }
 }
 function drawShip(x,y,a,r,color='white'){
     ctx.strokeStyle=color;
@@ -82,15 +80,28 @@ function drawShip(x,y,a,r,color='white'){
     ctx.closePath();
     ctx.stroke();
 }
+function rotateShip(ship){
+    ship.a+=ship.rot;
+}
 function keyDown(e){
     e.preventDefault();
     switch(e.key){
         case 'a':
-            
+            ship.rot=-.01;
+            break;
+        case 'd':
+            ship.rot=.01;
+            break;
     }
+}
+function draw(){
+    drawShip(ship.x,ship.y,ship.a,ship.r);
 }
 function update(){
     ctx.clearRect(0,0,gamesEl.width,gamesEl.height);
+    rotateShip(ship);
+    draw();
     requestAnimationFrame(update);
 }
 update();
+document.addEventListener('keydown',keyDown);
