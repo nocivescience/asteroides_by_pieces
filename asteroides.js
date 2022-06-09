@@ -147,7 +147,7 @@ function movementAsteroids(){
     for(var i=0;i<roids.length;i++){
         var roid=roids[i];
         roid.x+=roid.xv;
-        roid.y+=roid.yv;
+        roid.y+=roid.yv;  //movimiento de los asteroides
         if(roid.x>gamesEl.width+roid.r){
             roid.x-=gamesEl.width+roid.r*2;
         }else if(roid.x<-roid.r){
